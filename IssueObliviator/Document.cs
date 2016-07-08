@@ -19,8 +19,8 @@ namespace IssueObliviator
             FullPath = file;
             FileName = GetFileName(FullPath);
             FileType = GetFileType(FullPath);
-            SheetNumber = GetSheetNumber();
-            RevisionCode = GetRevisionCode();
+            SheetNumber = GetSheetNumber(FileName);
+            RevisionCode = GetRevisionCode(FileName);
         }
 
         private string GetFileName(string path) // Extracts file name from the full path
@@ -32,14 +32,34 @@ namespace IssueObliviator
             return fileName;
         }
 
-        private string GetRevisionCode() // Extracts revision code from the file name
+        private string GetRevisionCode(string fileName) // Extracts revision code from the file name
         {
-            throw new NotImplementedException();
+            try
+            {
+                var partialName = fileName.Substring(fileName.IndexOf("_") + 1);
+                var revisionCode = partialName.Substring(partialName.IndexOf("_") + 1);
+                return revisionCode;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+            return null;
         }
 
-        private string GetSheetNumber() // Extracts sheet number from the file name
+        private string GetSheetNumber(string fileName) // Extracts sheet number from the file name
         {
-            throw new NotImplementedException();
+            try
+            {
+                var partialName = fileName.Substring(fileName.IndexOf("_") + 1);
+                var sheetNumber = partialName.Substring(0, 5);
+                return sheetNumber;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+            return null;
         }
 
         private string GetFileType(string path) // Extracts file extension from the full path
