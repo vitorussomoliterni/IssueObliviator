@@ -31,11 +31,18 @@ namespace IssueObliviator
                 Directory.CreateDirectory(destinationFolder);
             }
 
-            foreach (var f in oldFiles)
+            try
             {
-                var sourceFile = f.FullPath;
-                string destinationFile = Directory.GetCurrentDirectory() + destinationFolder + f.FileName;
-                Directory.Move(sourceFile, destinationFile);
+                foreach (var f in oldFiles)
+                {
+                    var sourceFile = f.FullPath;
+                    string destinationFile = Directory.GetCurrentDirectory() + destinationFolder + f.FileName;
+                    Directory.Move(sourceFile, destinationFile);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
             }
         }
 
