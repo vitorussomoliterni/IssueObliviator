@@ -22,9 +22,7 @@ namespace IssueObliviator
         private string GetFileName(string path) // Extracts file name from the full path
         {
             var fileNameStartIndex = path.LastIndexOf("\\") + 1;
-            var fileNameEndIndex = path.LastIndexOf(".");
-            var fileNameLength = fileNameEndIndex - fileNameStartIndex;
-            var fileName = path.Substring(fileNameStartIndex, fileNameLength);
+            var fileName = path.Substring(fileNameStartIndex);
             return fileName;
         }
 
@@ -33,7 +31,9 @@ namespace IssueObliviator
             try
             {
                 var partialName = fileName.Substring(fileName.IndexOf("_") + 1);
-                var revisionCode = partialName.Substring(partialName.IndexOf("_") + 1);
+                var lastIndexReviosionCode = partialName.LastIndexOf(".");
+                var revisionCodeLength = lastIndexReviosionCode - partialName.IndexOf("_") - 1;
+                var revisionCode = partialName.Substring(partialName.IndexOf("_") + 1, revisionCodeLength);
                 return revisionCode;
             }
             catch (Exception e)

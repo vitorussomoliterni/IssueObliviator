@@ -18,9 +18,22 @@ namespace IssueObliviator
         private static void MoveOlderFiles(List<Document> documents)
         {
             var oldFiles = GetOldFilesList(documents).Distinct();
+
             foreach (var f in oldFiles)
             {
                 Console.WriteLine(f.FileName);
+            }
+
+            if (!Directory.Exists("SS"))
+            {
+                Directory.CreateDirectory("SS");
+            }
+
+            foreach (var f in oldFiles)
+            {
+                var sourceFile = f.FullPath;
+                string destinationFile = Directory.GetCurrentDirectory() + @"\SS\" + f.FileName;
+                Directory.Move(sourceFile, destinationFile);
             }
         }
 
