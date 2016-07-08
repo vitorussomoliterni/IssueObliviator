@@ -88,7 +88,7 @@ namespace IssueObliviator
             {
                 return true;
             }
-            for (int i = 1; i <= code.Length; i++)
+            for (int i = 1; i < code.Length; i++)
             {
                 if (!code[i].Equals(code[i - 1]))
                 {

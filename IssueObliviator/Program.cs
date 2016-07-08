@@ -26,24 +26,24 @@ namespace IssueObliviator
             {
                 var sameSheet = documents.FindAll(d => d.SheetNumber == doc.SheetNumber).ToList();
                 sameSheet.OrderBy(d => d.RevisionCode).ToList();
+                doc.IsRevisionCodeAcceptable();
+                //while(sameSheet.Count > 1)
+                //{
+                //    foreach (var s in sameSheet)
+                //    {
+                //        Document t = sameSheet.FirstOrDefault();
+                //        var currentCode = s.RevisionCode;
+                //        if (s.IsRevisionCodeANumber())
+                //        {
 
-                while(sameSheet.Count > 1)
-                {
-                    foreach (var s in sameSheet)
-                    {
-                        Document t = sameSheet.FirstOrDefault();
-                        var currentCode = s.RevisionCode;
-                        if (s.IsRevisionCodeANumber())
-                        {
-
-                        }
-                        var previousCode = t.RevisionCode;
-                        if (currentCode.Length < previousCode.Length)
-                        {
-                            sameSheet.Remove(s);
-                        }
-                    }
-                }
+                //        }
+                //        var previousCode = t.RevisionCode;
+                //        if (currentCode.Length < previousCode.Length)
+                //        {
+                //            sameSheet.Remove(s);
+                //        }
+                //    }
+                //}
             }
 
             return null;
