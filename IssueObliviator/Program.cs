@@ -11,12 +11,27 @@ namespace IssueObliviator
     {
         static void Main(string[] args)
         {
-            GetFiles();
+            var files = GetFiles();
         }
 
-        private static void GetFiles()
+        private static List<string> GetFiles()
         {
-            var files = 
+            var files = from file in Directory.EnumerateFiles("", "*.*", SearchOption.TopDirectoryOnly) // Gets a list of all files
+                        select new
+                        {
+                            File = file
+                        };
+
+            List<string> fileList = new List<string>();
+
+            foreach (var f in files)
+            {
+                if (f.File.ToLower().Trim().EndsWith("pdf") || f.File.ToLower().Trim().EndsWith("dwg")) // Checks if files are pdf or dwg
+                {
+                    fileList.Add(f.File); // Adds pdfs and dwgs to list
+                }
+            }
+            return fileList;
         }
     }
 }
