@@ -7,7 +7,7 @@ namespace IssueObliviator
 {
     public class Program
     {
-        static string destinationFolder = @"\SS\";
+        static string destinationFolder = @"SS\";
 
         static void Main(string[] args)
         {
@@ -35,11 +35,12 @@ namespace IssueObliviator
                 foreach (var f in oldFiles)
                 {
                     var sourceFile = f.FullPath;
-                    var destinationFile = Directory.GetCurrentDirectory() + destinationFolder + f.FileName;
+                    var destinationFile = Directory.GetCurrentDirectory() + "\\" + destinationFolder + f.FileName;
                     if (File.Exists(destinationFile))
                     {
                         destinationFile += "_copy";
                     }
+                    Console.WriteLine(destinationFile);
                     Directory.Move(sourceFile, destinationFile);
                 }
             }
