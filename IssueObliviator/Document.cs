@@ -69,5 +69,21 @@ namespace IssueObliviator
 
             return fileType;
         }
+
+        public bool IsRevisionCodeANumber()
+        {
+            int i;
+            if (int.TryParse(this.RevisionCode, out i))
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public bool IsRevisionCodeAcceptable()
+        {
+
+            return true;
+        }
     }
 }

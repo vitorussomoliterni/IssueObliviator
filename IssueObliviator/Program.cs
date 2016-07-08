@@ -11,25 +11,59 @@ namespace IssueObliviator
     {
         static void Main(string[] args)
         {
-            var files = GetFiles();
+            var documents = GetDocuments();
+            MoveOlderFiles(documents);
         }
 
-        private static List<Document> GetFiles() // Returns a list of .pdf and .dwg documents in current folder
+        private static void MoveOlderFiles(List<Document> documents)
+        {
+            var oldFiles = GetOldFilesList(documents);
+        }
+
+        private static List<Document> GetOldFilesList(List<Document> documents)
+        {
+            foreach (var doc in documents)
+            {
+                var sameSheet = documents.FindAll(d => d.SheetNumber == doc.SheetNumber).ToList();
+                sameSheet.OrderBy(d => d.RevisionCode).ToList();
+                while(sameSheet.Count > 1)
+                {
+                    foreach (var s in sameSheet)
+                    {
+                        Document t = sameSheet.FirstOrDefault();
+                        var currentCode = s.RevisionCode;
+                        if (s.IsRevisionCodeANumber())
+                        {
+
+                        }
+                        var previousCode = t.RevisionCode;
+                        if (currentCode.Length < previousCode.Length)
+                        {
+                            sameSheet.Remove(s);
+                        }
+                    }
+                }
+            }
+
+            return null;
+        }
+
+        private static List<Document> GetDocuments() // Returns a list of .pdf and .dwg documents in current folder
         {
             var files = from file in Directory.EnumerateFiles(Directory.GetCurrentDirectory(), "*", SearchOption.TopDirectoryOnly) // Gets a list of all files
                         select new
                         {
-                            File = file
+                            Path = file
                         };
 
             var documents = new List<Document>();
 
             foreach (var f in files)
             {
-                var file = f.File.ToLower().Trim();
+                var file = f.Path.ToLower().Trim();
                 if (file.EndsWith("pdf") || file.EndsWith("dwg")) // Checks if files are pdf or dwg
                 {
-                    var document = new Document(f.File);
+                    var document = new Document(f.Path);
                     documents.Add(document); // Adds pdfs and dwgs to list
                 }
             }
