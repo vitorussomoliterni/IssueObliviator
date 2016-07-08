@@ -12,18 +12,23 @@ namespace IssueObliviator
         public string Name { get; set; }
         public string FileType { get; set; }
         public string SheetNumber { get; set; }
-        public string RevisionNumber { get; set; }
+        public string RevisionCode { get; set; }
 
         public Document(string file)
         {
-            FullPath = "";
-            Name = file;
+            FullPath = file;
+            Name = GetFileName();
             FileType = GetFileType();
             SheetNumber = GetSheetNumber();
-            RevisionNumber = GetRevisionNumber();
+            RevisionCode = GetRevisionCode();
         }
 
-        private string GetRevisionNumber()
+        private string GetFileName()
+        {
+            throw new NotImplementedException();
+        }
+
+        private string GetRevisionCode()
         {
             throw new NotImplementedException();
         }

@@ -14,24 +14,25 @@ namespace IssueObliviator
             var files = GetFiles();
         }
 
-        private static List<string> GetFiles()
+        private static List<Document> GetFiles()
         {
-            var files = from file in Directory.EnumerateFiles("", "*.*", SearchOption.TopDirectoryOnly) // Gets a list of all files
+            var files = from file in Directory.EnumerateFiles(Directory.GetCurrentDirectory(), "*", SearchOption.TopDirectoryOnly) // Gets a list of all files
                         select new
                         {
                             File = file
                         };
 
-            List<string> fileList = new List<string>();
+            var documents = new List<Document>();
 
             foreach (var f in files)
             {
                 if (f.File.ToLower().Trim().EndsWith("pdf") || f.File.ToLower().Trim().EndsWith("dwg")) // Checks if files are pdf or dwg
                 {
-                    fileList.Add(f.File); // Adds pdfs and dwgs to list
+                    var document = new Document(f.File);
+                    documents.Add(document); // Adds pdfs and dwgs to list
                 }
             }
-            return fileList;
+            return documents;
         }
     }
 }
