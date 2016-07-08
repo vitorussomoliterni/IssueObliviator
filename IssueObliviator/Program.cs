@@ -9,6 +9,8 @@ namespace IssueObliviator
 {
     public class Program
     {
+        static string destinationFolder = @"\SS\";
+
         static void Main(string[] args)
         {
             var documents = GetDocuments();
@@ -24,15 +26,15 @@ namespace IssueObliviator
                 Console.WriteLine(f.FileName);
             }
 
-            if (!Directory.Exists("SS"))
+            if (!Directory.Exists(destinationFolder))
             {
-                Directory.CreateDirectory("SS");
+                Directory.CreateDirectory(destinationFolder);
             }
 
             foreach (var f in oldFiles)
             {
                 var sourceFile = f.FullPath;
-                string destinationFile = Directory.GetCurrentDirectory() + @"\SS\" + f.FileName;
+                string destinationFile = Directory.GetCurrentDirectory() + destinationFolder + f.FileName;
                 Directory.Move(sourceFile, destinationFile);
             }
         }
