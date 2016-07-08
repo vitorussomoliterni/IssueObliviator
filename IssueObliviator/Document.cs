@@ -84,7 +84,7 @@ namespace IssueObliviator
         public bool IsRevisionCodeAcceptable() // Checks if revision code format complies to standard
         {
             var code = this.RevisionCode;
-            if (code.Length == 1)
+            if (code.Length == 1 || IsRevisionCodeANumber())
             {
                 return true;
             }

@@ -22,31 +22,64 @@ namespace IssueObliviator
 
         private static List<Document> GetOldFilesList(List<Document> documents)
         {
+            var filesToIgnore = documents.FindAll(f => f.IsRevisionCodeAcceptable() == false).ToList();
+
+            foreach (var f in filesToIgnore)
+            {
+                documents.Remove(f);
+            }
+
             foreach (var doc in documents)
             {
-                var sameSheet = documents.FindAll(d => d.SheetNumber == doc.SheetNumber).ToList();
-                sameSheet.OrderBy(d => d.RevisionCode).ToList();
-                doc.IsRevisionCodeAcceptable();
-                //while(sameSheet.Count > 1)
-                //{
-                //    foreach (var s in sameSheet)
-                //    {
-                //        Document t = sameSheet.FirstOrDefault();
-                //        var currentCode = s.RevisionCode;
-                //        if (s.IsRevisionCodeANumber())
-                //        {
+                var sameCodeGroup = documents.FindAll(d => d.SheetNumber == doc.SheetNumber).ToList();
 
-                //        }
-                //        var previousCode = t.RevisionCode;
-                //        if (currentCode.Length < previousCode.Length)
-                //        {
-                //            sameSheet.Remove(s);
-                //        }
-                //    }
-                //}
+                sameCodeGroup.OrderBy(d => d.RevisionCode).ToList();
+
+                while (sameCodeGroup.Count > 1)
+                {
+                    var codeGroupStatus = CheckCodeListContent(sameCodeGroup);
+                    if (codeGroupStatus == "both")
+                    {
+                        // Move all numbers
+                    }
+                    else if (codeGroupStatus == "numbers")
+                    {
+                        // Get higher number and move everything else
+                    }
+
+                    else if (codeGroupStatus == "letters")
+                    {
+                        // Get latest file and move everything else
+                    }
+                }
             }
 
             return null;
+        }
+
+        private static string CheckCodeListContent(List<Document> documents)
+        {
+            var CodesWithLetters = documents.FindAll(d => d.IsRevisionCodeANumber() == false).ToList();
+            var CodesWithNumbers = documents.FindAll(d => d.IsRevisionCodeANumber() == true).ToList();
+
+            string output = "";
+
+            if (CodesWithLetters.Count > 0 && CodesWithNumbers.Count > 0)
+            {
+                output = "both";
+            }
+
+            else if (CodesWithLetters.Count == 0 && CodesWithNumbers.Count > 0)
+            {
+                output = "numbers";
+            }
+
+            else if (CodesWithLetters.Count > 0 && CodesWithNumbers.Count == 0)
+            {
+                output = "letters";
+            }
+
+            return output;
         }
 
         private static List<Document> GetDocuments() // Returns a list of .pdf and .dwg documents in current folder
