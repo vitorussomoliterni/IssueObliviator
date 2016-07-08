@@ -2,8 +2,6 @@
 using System.IO;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace IssueObliviator
 {
@@ -15,6 +13,7 @@ namespace IssueObliviator
         {
             var documents = GetDocuments();
             MoveOlderFiles(documents);
+            Console.ReadKey();
         }
 
         private static void MoveOlderFiles(List<Document> documents)
@@ -36,13 +35,17 @@ namespace IssueObliviator
                 foreach (var f in oldFiles)
                 {
                     var sourceFile = f.FullPath;
-                    string destinationFile = Directory.GetCurrentDirectory() + destinationFolder + f.FileName;
+                    var destinationFile = Directory.GetCurrentDirectory() + destinationFolder + f.FileName;
+                    if (File.Exists(destinationFile))
+                    {
+                        destinationFile += "_copy";
+                    }
                     Directory.Move(sourceFile, destinationFile);
                 }
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
+                Console.WriteLine(e.ToString());
             }
         }
 
@@ -60,14 +63,14 @@ namespace IssueObliviator
 
                 sameCodeGroup.OrderBy(d => d.RevisionCode).ToList();
 
-                while (sameCodeGroup.Count > 1)
+                while (true)
                 {
                     var codeGroupStatus = CheckCodeListContent(sameCodeGroup);
                     if (codeGroupStatus == "both")
                     {
-                        var numberCodes = sameCodeGroup.FindAll(f => f.IsRevisionCodeANumber()).ToList();
-                        filesToMove.AddRange(numberCodes);
-                        sameCodeGroup = RemoveFiles(sameCodeGroup, numberCodes);
+                        var numberCodes = sameCodeGroup.FindAll(f => f.IsRevisionCodeANumber()).ToList(); // Selects all the files with numbers as code
+                        filesToMove.AddRange(numberCodes); // Adds all the files with numbers as code to the list of the files to move
+                        sameCodeGroup = RemoveFiles(sameCodeGroup, numberCodes); // Remove all the files with numbers as code from the current list of files to check
                     }
                     else if (codeGroupStatus == "numbers")
                     {
