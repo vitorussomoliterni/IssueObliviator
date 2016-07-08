@@ -49,6 +49,7 @@ namespace IssueObliviator
                     }
                     else if (codeGroupStatus == "numbers")
                     {
+                        sameCodeGroup = OrderNumbers(sameCodeGroup);
                         sameCodeGroup.Remove(sameCodeGroup.Last());
                         filesToMove.AddRange(sameCodeGroup);
                         break;
@@ -67,7 +68,25 @@ namespace IssueObliviator
             return filesToMove;
         }
 
-        private static List<Document> OrderLetters(List<Document> list)
+        private static List<Document> OrderNumbers(List<Document> list) // Orders numbers and puts the most recent one at the end
+        {
+            var lastElement = list.Last();
+
+            foreach (var f in list)
+            {
+                if (int.Parse(f.RevisionCode) >= int.Parse(lastElement.RevisionCode))
+                {
+                    lastElement = f;
+                }
+            }
+
+            list.Remove(lastElement);
+            list.Add(lastElement);
+
+            return list;
+        }
+
+        private static List<Document> OrderLetters(List<Document> list) // Orders letters and puts the most recent one at the end
         {
             var lastElement = list.Last();
 
@@ -94,8 +113,6 @@ namespace IssueObliviator
 
             return files;
         }
-
-
 
         private static string CheckCodeListContent(List<Document> documents) // Analyses content of a code group
         {
