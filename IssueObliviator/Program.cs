@@ -14,7 +14,7 @@ namespace IssueObliviator
             var files = GetFiles();
         }
 
-        private static List<Document> GetFiles()
+        private static List<Document> GetFiles() // Returns a list of .pdf and .dwg documents in current folder
         {
             var files = from file in Directory.EnumerateFiles(Directory.GetCurrentDirectory(), "*", SearchOption.TopDirectoryOnly) // Gets a list of all files
                         select new

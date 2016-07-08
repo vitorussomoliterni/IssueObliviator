@@ -17,13 +17,13 @@ namespace IssueObliviator
         public Document(string file)
         {
             FullPath = file;
-            FileName = GetFileName(this.FullPath);
-            FileType = GetFileType();
+            FileName = GetFileName(FullPath);
+            FileType = GetFileType(FullPath);
             SheetNumber = GetSheetNumber();
             RevisionCode = GetRevisionCode();
         }
 
-        private string GetFileName(string path)
+        private string GetFileName(string path) // Extracts file name from the full path
         {
             var fileNameStartIndex = path.LastIndexOf("\\") + 1;
             var fileNameEndIndex = path.LastIndexOf(".");
@@ -32,19 +32,22 @@ namespace IssueObliviator
             return fileName;
         }
 
-        private string GetRevisionCode()
+        private string GetRevisionCode() // Extracts revision code from the file name
         {
             throw new NotImplementedException();
         }
 
-        private string GetSheetNumber()
+        private string GetSheetNumber() // Extracts sheet number from the file name
         {
             throw new NotImplementedException();
         }
 
-        private string GetFileType()
+        private string GetFileType(string path) // Extracts file extension from the full path
         {
-            throw new NotImplementedException();
+            var extensionStartIndex = path.LastIndexOf(".") + 1;
+            var fileType = path.Substring(extensionStartIndex);
+
+            return fileType;
         }
     }
 }
