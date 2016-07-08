@@ -26,6 +26,7 @@ namespace IssueObliviator
             {
                 var sameSheet = documents.FindAll(d => d.SheetNumber == doc.SheetNumber).ToList();
                 sameSheet.OrderBy(d => d.RevisionCode).ToList();
+
                 while(sameSheet.Count > 1)
                 {
                     foreach (var s in sameSheet)

@@ -70,19 +70,31 @@ namespace IssueObliviator
             return fileType;
         }
 
-        public bool IsRevisionCodeANumber()
+        public bool IsRevisionCodeANumber() // Checks if revision code is a number
         {
             int i;
-            if (int.TryParse(this.RevisionCode, out i))
+            var code = this.RevisionCode;
+            if (int.TryParse(code, out i))
             {
                 return true;
             }
             return false;
         }
 
-        public bool IsRevisionCodeAcceptable()
+        public bool IsRevisionCodeAcceptable() // Checks if revision code format complies to standard
         {
-
+            var code = this.RevisionCode;
+            if (code.Length == 1)
+            {
+                return true;
+            }
+            for (int i = 1; i <= code.Length; i++)
+            {
+                if (!code[i].Equals(code[i - 1]))
+                {
+                    return false;
+                }
+            }
             return true;
         }
     }
