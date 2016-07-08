@@ -26,7 +26,8 @@ namespace IssueObliviator
 
             foreach (var f in files)
             {
-                if (f.File.ToLower().Trim().EndsWith("pdf") || f.File.ToLower().Trim().EndsWith("dwg")) // Checks if files are pdf or dwg
+                var file = f.File.ToLower().Trim();
+                if (file.EndsWith("pdf") || file.EndsWith("dwg")) // Checks if files are pdf or dwg
                 {
                     var document = new Document(f.File);
                     documents.Add(document); // Adds pdfs and dwgs to list
