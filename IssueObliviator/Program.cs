@@ -182,7 +182,7 @@ namespace IssueObliviator
 
         private static List<Document> GetDocuments(string searchOption) // Returns a list of .pdf and .dwg documents in current folder
         {
-            var files = from file in Directory.GetFiles(Directory.GetCurrentDirectory(), searchOption, SearchOption.TopDirectoryOnly) // Gets a list of all files
+            var files = from file in Directory.GetFiles(Directory.GetCurrentDirectory() + @"\Custom_10030", searchOption, SearchOption.TopDirectoryOnly) // Gets a list of all files
                         select new
                         {
                             Path = file
