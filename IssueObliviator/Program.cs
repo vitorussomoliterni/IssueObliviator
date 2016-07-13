@@ -49,18 +49,19 @@ namespace IssueObliviator
         private static string RenameExistingDestinationFile(string file, Document document)
         {
             file = file.Replace(document.FileType, ""); // Takes the extension from the file
-            var i = 1;
-            var copyVersion = "_copy(" + i + ").";
-            
-            if (file.Contains(copyVersion)) // Checks if a copy of that file exists already
+            var version = 1;
+            var textToAdd = "copy(" + version + ").";
+            file += textToAdd + document.FileType; // Renames the file
+
+            while (File.Exists(file))
             {
-                i++;
-                file = file.Replace(copyVersion, ""); // Removes the old copy version
-                copyVersion = "_copy(" + i + ")."; // Increments the new copy version number
+                version++;
+                file = file.Replace(textToAdd, ""); // Removes the old copy version
+                file = file.Replace(document.FileType, ""); // Takes the extension from the file
+                textToAdd = "copy(" + version + ")."; // Increments the new copy version number
+                file += textToAdd + document.FileType; // Renames the file with the new copy version
             }
-
-            file += copyVersion + document.FileType; // Rename the files with the new copy version
-
+            
             return file;
         }
 
