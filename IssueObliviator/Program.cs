@@ -194,7 +194,7 @@ namespace IssueObliviator
             {
                 var file = f.Path.ToLower().Trim();
                 var document = new Document(f.Path);
-                documents.Add(document); // Adds pdfs and dwgs to list
+                documents.Add(document);
             }
             return documents;
         }
