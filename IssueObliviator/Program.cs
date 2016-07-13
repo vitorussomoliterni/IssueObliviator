@@ -11,8 +11,10 @@ namespace IssueObliviator
 
         static void Main(string[] args)
         {
-            var documents = GetDocuments();
-            MoveOlderFiles(documents);
+            var pdfDocuments = GetDocuments("*.pdf");
+            var dwgDocuments = GetDocuments("*.dwg");
+            MoveOlderFiles(pdfDocuments);
+            MoveOlderFiles(dwgDocuments);
         }
 
         private static void MoveOlderFiles(List<Document> documents)
@@ -158,9 +160,9 @@ namespace IssueObliviator
             return output;
         }
 
-        private static List<Document> GetDocuments() // Returns a list of .pdf and .dwg documents in current folder
+        private static List<Document> GetDocuments(string searchOption) // Returns a list of .pdf and .dwg documents in current folder
         {
-            var files = from file in Directory.GetFiles(Directory.GetCurrentDirectory(), "*", SearchOption.TopDirectoryOnly) // Gets a list of all files
+            var files = from file in Directory.GetFiles(Directory.GetCurrentDirectory(), searchOption, SearchOption.TopDirectoryOnly) // Gets a list of all files
                         select new
                         {
                             Path = file
