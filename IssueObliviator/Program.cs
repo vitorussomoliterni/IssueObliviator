@@ -41,7 +41,7 @@ namespace IssueObliviator
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.ToString());
+                System.Windows.Forms.MessageBox.Show(e.ToString(), "Error");
             }
         }
 
