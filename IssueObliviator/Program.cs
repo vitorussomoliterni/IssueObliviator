@@ -33,10 +33,7 @@ namespace IssueObliviator
                 {
                     var sourceFile = f.FullPath;
                     var destinationFile = Directory.GetCurrentDirectory() + "\\" + destinationFolder + f.FileName;
-                    if (File.Exists(destinationFile))
-                    {
-                        destinationFile += "_copy";
-                    }
+                    destinationFile = CheckIfFilesExists(destinationFile, f);
                     Directory.Move(sourceFile, destinationFile);
                 }
             }
@@ -44,6 +41,11 @@ namespace IssueObliviator
             {
                 MessageBox.Show(e.ToString(), "Error");
             }
+        }
+
+        private static string CheckIfFilesExists(string destinationFile, Document f)
+        {
+            throw new NotImplementedException();
         }
 
         private static List<Document> GetOldFilesList(List<Document> documents)
