@@ -20,7 +20,7 @@ namespace IssueObliviator
         private static void MoveOlderFiles(List<Document> documents)
         {
             var oldFiles = GetOldFilesList(documents).Distinct();
-            
+
             if (!Directory.Exists(destinationFolder))
             {
                 Directory.CreateDirectory(destinationFolder);
@@ -50,7 +50,7 @@ namespace IssueObliviator
             var filesToMove = new List<Document>();
 
             var filesToIgnore = documents.FindAll(f => f.IsRevisionCodeAcceptable() == false).ToList();
-            
+
             documents = RemoveFiles(documents, filesToIgnore);
 
             foreach (var doc in documents)
@@ -173,11 +173,8 @@ namespace IssueObliviator
             foreach (var f in files)
             {
                 var file = f.Path.ToLower().Trim();
-                if (file.EndsWith("pdf") || file.EndsWith("dwg")) // Checks if files are pdf or dwg
-                {
-                    var document = new Document(f.Path);
-                    documents.Add(document); // Adds pdfs and dwgs to list
-                }
+                var document = new Document(f.Path);
+                documents.Add(document); // Adds pdfs and dwgs to list
             }
             return documents;
         }
