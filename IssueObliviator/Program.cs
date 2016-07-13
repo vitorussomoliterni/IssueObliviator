@@ -13,18 +13,12 @@ namespace IssueObliviator
         {
             var documents = GetDocuments();
             MoveOlderFiles(documents);
-            Console.ReadKey();
         }
 
         private static void MoveOlderFiles(List<Document> documents)
         {
             var oldFiles = GetOldFilesList(documents).Distinct();
-
-            foreach (var f in oldFiles)
-            {
-                Console.WriteLine(f.FileName);
-            }
-
+            
             if (!Directory.Exists(destinationFolder))
             {
                 Directory.CreateDirectory(destinationFolder);
@@ -40,7 +34,6 @@ namespace IssueObliviator
                     {
                         destinationFile += "_copy";
                     }
-                    Console.WriteLine(destinationFile);
                     Directory.Move(sourceFile, destinationFile);
                 }
             }
@@ -167,7 +160,7 @@ namespace IssueObliviator
 
         private static List<Document> GetDocuments() // Returns a list of .pdf and .dwg documents in current folder
         {
-            var files = from file in Directory.EnumerateFiles(Directory.GetCurrentDirectory(), "*", SearchOption.TopDirectoryOnly) // Gets a list of all files
+            var files = from file in Directory.GetFiles(Directory.GetCurrentDirectory(), "*", SearchOption.TopDirectoryOnly) // Gets a list of all files
                         select new
                         {
                             Path = file
