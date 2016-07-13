@@ -8,7 +8,7 @@ namespace IssueObliviator
 {
     public class Program
     {
-        static string destinationFolder = @"SS\";
+        static string destinationFolder = @"PREVIOUSLY ISSUED - KEEP\";
 
         static void Main(string[] args)
         {

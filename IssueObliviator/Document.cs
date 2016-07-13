@@ -48,7 +48,9 @@ namespace IssueObliviator
             try
             {
                 var partialName = fileName.Substring(fileName.IndexOf("_") + 1);
-                var sheetNumber = partialName.Substring(0, 5);
+                var lastIndexSheetNumber = partialName.LastIndexOf("_");
+                var sheetNumberLength = lastIndexSheetNumber - fileName.IndexOf("_") - 1;
+                var sheetNumber = partialName.Substring(0, sheetNumberLength);
                 return sheetNumber;
             }
             catch (Exception e)
