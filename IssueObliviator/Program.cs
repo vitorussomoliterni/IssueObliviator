@@ -33,7 +33,10 @@ namespace IssueObliviator
                 {
                     var sourceFile = f.FullPath;
                     var destinationFile = Directory.GetCurrentDirectory() + "\\" + destinationFolder + f.FileName;
-                    destinationFile = CheckIfFilesExists(destinationFile, f);
+                    if (File.Exists(destinationFile))
+                    {
+                        destinationFile = RenameExistingDestinationFile(destinationFile, f);
+                    }
                     Directory.Move(sourceFile, destinationFile);
                 }
             }
@@ -43,9 +46,22 @@ namespace IssueObliviator
             }
         }
 
-        private static string CheckIfFilesExists(string destinationFile, Document f)
+        private static string RenameExistingDestinationFile(string file, Document document)
         {
-            throw new NotImplementedException();
+            file = file.Replace(document.FileType, ""); // Takes the extension from the file
+            var i = 1;
+            var copyVersion = "_copy(" + i + ").";
+            
+            if (file.Contains(copyVersion)) // Checks if a copy of that file exists already
+            {
+                i++;
+                file = file.Replace(copyVersion, ""); // Removes the old copy version
+                copyVersion = "_copy(" + i + ")."; // Increments the new copy version number
+            }
+
+            file += copyVersion + document.FileType; // Rename the files with the new copy version
+
+            return file;
         }
 
         private static List<Document> GetOldFilesList(List<Document> documents)
