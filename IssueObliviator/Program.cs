@@ -48,7 +48,7 @@ namespace IssueObliviator
 
         private static string RenameExistingDestinationFile(string file, Document document)
         {
-            file = file.Replace(document.FileType, string.Empty); // Takes the extension from the file
+            file = file.Replace(document.FileType, string.Empty); // Removes the extension from the file name
             var version = 1;
             var textToAdd = "copy(" + version + ").";
             file += textToAdd + document.FileType; // Renames the file
@@ -57,7 +57,7 @@ namespace IssueObliviator
             {
                 version++;
                 file = file.Replace(textToAdd, string.Empty); // Removes the old copy version
-                file = file.Replace(document.FileType, string.Empty); // Takes the extension from the file
+                file = file.Replace(document.FileType, string.Empty); // Removes the extension from the file name
                 textToAdd = "copy(" + version + ")."; // Increments the new copy version number
                 file += textToAdd + document.FileType; // Renames the file with the new copy version
             }
