@@ -30,10 +30,9 @@ namespace IssueObliviator
         {
             try
             {
-                var partialName = fileName.Substring(fileName.IndexOf("_") + 1);
+                var partialName = fileName.Substring(fileName.LastIndexOf("_") + 1);
                 var lastIndexReviosionCode = partialName.LastIndexOf(".");
-                var revisionCodeLength = lastIndexReviosionCode - partialName.IndexOf("_") - 1;
-                var revisionCode = partialName.Substring(partialName.IndexOf("_") + 1, revisionCodeLength);
+                var revisionCode = partialName.Substring(0, lastIndexReviosionCode);
                 return revisionCode;
             }
             catch (Exception e)
