@@ -48,7 +48,7 @@ namespace IssueObliviator
 
         private static string RenameExistingDestinationFile(string file, Document document)
         {
-            file = file.Replace(document.FileType, ""); // Takes the extension from the file
+            file = file.Replace(document.FileType, string.Empty); // Takes the extension from the file
             var version = 1;
             var textToAdd = "copy(" + version + ").";
             file += textToAdd + document.FileType; // Renames the file
@@ -56,8 +56,8 @@ namespace IssueObliviator
             while (File.Exists(file))
             {
                 version++;
-                file = file.Replace(textToAdd, ""); // Removes the old copy version
-                file = file.Replace(document.FileType, ""); // Takes the extension from the file
+                file = file.Replace(textToAdd, string.Empty); // Removes the old copy version
+                file = file.Replace(document.FileType, string.Empty); // Takes the extension from the file
                 textToAdd = "copy(" + version + ")."; // Increments the new copy version number
                 file += textToAdd + document.FileType; // Renames the file with the new copy version
             }
@@ -160,7 +160,7 @@ namespace IssueObliviator
             var CodesWithLetters = documents.FindAll(d => d.IsRevisionCodeANumber() == false).ToList();
             var CodesWithNumbers = documents.FindAll(d => d.IsRevisionCodeANumber() == true).ToList();
 
-            string output = "";
+            string output = string.Empty;
 
             if (CodesWithLetters.Count > 0 && CodesWithNumbers.Count > 0)
             {
