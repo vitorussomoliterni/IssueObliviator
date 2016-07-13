@@ -2,6 +2,7 @@
 using System.IO;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Forms;
 
 namespace IssueObliviator
 {
@@ -41,7 +42,7 @@ namespace IssueObliviator
             }
             catch (Exception e)
             {
-                System.Windows.Forms.MessageBox.Show(e.ToString(), "Error");
+                MessageBox.Show(e.ToString(), "Error");
             }
         }
 
