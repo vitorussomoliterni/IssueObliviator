@@ -46,6 +46,29 @@ namespace IssueObliviator
             }
         }
 
+        private static bool IsFileLocked(FileInfo file)
+        {
+            FileStream stream = null;
+
+            try
+            {
+                stream = file.Open(FileMode.Open, FileAccess.Read, FileShare.None);
+            }
+            catch (Exception e)
+            {
+                return true;
+            }
+            finally
+            {
+                if (stream != null)
+                {
+                    stream.Close();
+                }
+            }
+
+            return false;
+        }
+
         private static string RenameExistingDestinationFile(string file, Document document)
         {
             file = file.Replace(document.FileType, string.Empty); // Removes the extension from the file name
