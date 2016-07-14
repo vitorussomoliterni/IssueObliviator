@@ -33,11 +33,24 @@ namespace IssueObliviator
                 {
                     var sourceFile = f.FullPath;
                     var destinationFile = Directory.GetCurrentDirectory() + "\\" + destinationFolder + f.FileName;
-                    if (File.Exists(destinationFile))
+                    var lockedDocuments = new List<Document>();
+                    if (IsFileLocked(new FileInfo(f.FullPath)))
                     {
-                        destinationFile = RenameExistingDestinationFile(destinationFile, f);
+                        lockedDocuments.Add(f);
                     }
-                    Directory.Move(sourceFile, destinationFile);
+                    else
+                    {
+                        if (File.Exists(destinationFile))
+                        {
+                            destinationFile = RenameExistingDestinationFile(destinationFile, f);
+                        }
+                        Directory.Move(sourceFile, destinationFile);
+                    }
+
+                    if (lockedDocuments.Count > 0)
+                    {
+                        // Log the files that cannot be opened
+                    }
                 }
             }
             catch (Exception e)
