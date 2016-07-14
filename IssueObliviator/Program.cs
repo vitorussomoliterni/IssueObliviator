@@ -34,7 +34,7 @@ namespace IssueObliviator
                     var sourceFile = f.FullPath;
                     var destinationFile = Directory.GetCurrentDirectory() + "\\" + destinationFolder + f.FileName;
                     var lockedDocuments = new List<Document>();
-                    if (IsFileLocked(new FileInfo(f.FullPath)))
+                    if (IsFileLocked(f))
                     {
                         lockedDocuments.Add(f);
                     }
@@ -59,8 +59,10 @@ namespace IssueObliviator
             }
         }
 
-        private static bool IsFileLocked(FileInfo file)
+        private static bool IsFileLocked(Document f)
         {
+            var file = new FileInfo(f.FullPath);
+
             FileStream stream = null;
 
             try
