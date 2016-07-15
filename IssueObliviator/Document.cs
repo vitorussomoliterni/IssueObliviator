@@ -30,6 +30,11 @@ namespace IssueObliviator
         {
             try
             {
+                var countUnderscores = fileName.Split('_').Length - 1;
+                if (countUnderscores < 4)
+                {
+                    return null;
+                }
                 var partialName = fileName.Substring(fileName.LastIndexOf("_") + 1);
                 var lastIndexReviosionCode = partialName.LastIndexOf(".");
                 var revisionCode = partialName.Substring(0, lastIndexReviosionCode);
@@ -46,11 +51,6 @@ namespace IssueObliviator
         {
             try
             {
-                var countUnderscores = fileName.Split('_').Length - 1;
-                if (countUnderscores < 4)
-                {
-                    return null;
-                }
                 var partialName = fileName.Substring(fileName.IndexOf("_") + 1);
                 var lastIndexSheetNumber = partialName.LastIndexOf("_");
                 var sheetNumber = partialName.Substring(0, lastIndexSheetNumber);
@@ -60,7 +60,7 @@ namespace IssueObliviator
             {
                 Console.WriteLine(e.Message);
             }
-            return null;
+            return string.Empty;
         }
 
         private string GetFileType(string path) // Extracts file extension from the full path

@@ -66,7 +66,11 @@ namespace IssueObliviator
             }
             catch (Exception e)
             {
-                MessageBox.Show(e.ToString(), "Error");
+                var error = "Error while moving files:\n" +
+                    e.GetType().Name + "\n" +
+                    e.ToString();
+                Log(error);
+                MessageBox.Show(error, "Error");
             }
         }
 
