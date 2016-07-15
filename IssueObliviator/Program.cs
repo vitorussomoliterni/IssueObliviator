@@ -9,6 +9,7 @@ namespace IssueObliviator
     public class Program
     {
         static string destinationFolder = @"PREVIOUSLY ISSUED - KEEP\";
+        static List<Document> lockedDocuments = new List<Document>();
 
         static void Main(string[] args)
         {
@@ -16,6 +17,21 @@ namespace IssueObliviator
             var dwgDocuments = GetDocuments("*.dwg");
             MoveOlderFiles(pdfDocuments);
             MoveOlderFiles(dwgDocuments);
+            ShowErrorMessage(lockedDocuments);
+        }
+
+        private static void ShowErrorMessage(List<Document> lockedDocuments)
+        {
+            var logMessage = "Try to close these files if open and then run the program again:\n\n";
+            if (lockedDocuments.Count > 0)
+            {
+                foreach (var s in lockedDocuments)
+                {
+                    logMessage += s.FileName + "\n";
+                }
+                MessageBox.Show(logMessage, "IssueObliviator Error: some files could not be moved", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Log(logMessage);
+            }
         }
 
         private static void MoveOlderFiles(List<Document> documents)
@@ -33,11 +49,19 @@ namespace IssueObliviator
                 {
                     var sourceFile = f.FullPath;
                     var destinationFile = Directory.GetCurrentDirectory() + "\\" + destinationFolder + f.FileName;
-                    if (File.Exists(destinationFile))
+                    
+                    if (IsFileLocked(f))
                     {
-                        destinationFile = RenameExistingDestinationFile(destinationFile, f);
+                        lockedDocuments.Add(f);
                     }
-                    Directory.Move(sourceFile, destinationFile);
+                    else
+                    {
+                        if (File.Exists(destinationFile))
+                        {
+                            destinationFile = RenameExistingDestinationFile(destinationFile, f);
+                        }
+                        Directory.Move(sourceFile, destinationFile);
+                    }
                 }
             }
             catch (Exception e)
@@ -46,9 +70,34 @@ namespace IssueObliviator
             }
         }
 
+        private static bool IsFileLocked(Document f)
+        {
+            var file = new FileInfo(f.FullPath);
+
+            FileStream stream = null;
+
+            try
+            {
+                stream = file.Open(FileMode.Open, FileAccess.Read, FileShare.None);
+            }
+            catch (Exception e)
+            {
+                return true;
+            }
+            finally
+            {
+                if (stream != null)
+                {
+                    stream.Close();
+                }
+            }
+
+            return false;
+        }
+
         private static string RenameExistingDestinationFile(string file, Document document)
         {
-            file = file.Replace(document.FileType, string.Empty); // Takes the extension from the file
+            file = file.Replace(document.FileType, string.Empty); // Removes the extension from the file name
             var version = 1;
             var textToAdd = "copy(" + version + ").";
             file += textToAdd + document.FileType; // Renames the file
@@ -57,7 +106,7 @@ namespace IssueObliviator
             {
                 version++;
                 file = file.Replace(textToAdd, string.Empty); // Removes the old copy version
-                file = file.Replace(document.FileType, string.Empty); // Takes the extension from the file
+                file = file.Replace(document.FileType, string.Empty); // Removes the extension from the file name
                 textToAdd = "copy(" + version + ")."; // Increments the new copy version number
                 file += textToAdd + document.FileType; // Renames the file with the new copy version
             }
@@ -197,6 +246,23 @@ namespace IssueObliviator
                 documents.Add(document);
             }
             return documents;
+        }
+
+        private static void Log(string logMessage)
+        {
+            try
+            {
+                using (StreamWriter w = File.AppendText(@"IssueObliviatorErrorLog.txt"))
+                {
+                    w.WriteLine(logMessage);
+                    w.WriteLine("Error logged on {0} at {1}", DateTime.Now.ToShortDateString(), DateTime.Now.ToShortTimeString());
+                    w.WriteLine("-------------------------------");
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.ToString(), "IssueObliviator: Error while logging", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }
