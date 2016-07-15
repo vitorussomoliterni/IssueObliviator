@@ -49,7 +49,7 @@ namespace IssueObliviator
 
                     if (lockedDocuments.Count > 0)
                     {
-                        // Log the files that cannot be opened
+                        // TODO: log the files that cannot be opened
                     }
                 }
             }
@@ -235,6 +235,22 @@ namespace IssueObliviator
                 documents.Add(document);
             }
             return documents;
+        }
+
+        private static void Log(string logMessage)
+        {
+            try
+            {
+                using (StreamWriter w = File.AppendText(@""))
+                {
+                    w.WriteLine(logMessage);
+                    w.WriteLine("-------------------------------");
+                }
+            }
+            catch (Exception e)
+            {
+                
+            }
         }
     }
 }
