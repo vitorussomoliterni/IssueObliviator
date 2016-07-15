@@ -9,6 +9,7 @@ namespace IssueObliviator
     public class Program
     {
         static string destinationFolder = @"SS\";
+        static List<Document> lockedDocuments = new List<Document>();
 
         static void Main(string[] args)
         {
@@ -16,6 +17,16 @@ namespace IssueObliviator
             var dwgDocuments = GetDocuments("*.dwg");
             MoveOlderFiles(pdfDocuments);
             MoveOlderFiles(dwgDocuments);
+            CheckSkippedFiles(lockedDocuments);
+        }
+
+        private static void CheckSkippedFiles(List<Document> lockedDocuments)
+        {
+            if (lockedDocuments.Count == 0)
+            {
+                // TODO: log the files that cannot be opened
+                MessageBox.Show("Some files could not be moved.", "Error", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Error);
+            }
         }
 
         private static void MoveOlderFiles(List<Document> documents)
@@ -33,7 +44,7 @@ namespace IssueObliviator
                 {
                     var sourceFile = f.FullPath;
                     var destinationFile = Directory.GetCurrentDirectory() + "\\" + destinationFolder + f.FileName;
-                    var lockedDocuments = new List<Document>();
+                    
                     if (IsFileLocked(f))
                     {
                         lockedDocuments.Add(f);
@@ -44,12 +55,7 @@ namespace IssueObliviator
                         {
                             destinationFile = RenameExistingDestinationFile(destinationFile, f);
                         }
-                        Directory.Move(sourceFile, destinationFile);
-                    }
-
-                    if (lockedDocuments.Count > 0)
-                    {
-                        // TODO: log the files that cannot be opened
+                        //Directory.Move(sourceFile, destinationFile);
                     }
                 }
             }
