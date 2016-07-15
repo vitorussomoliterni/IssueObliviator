@@ -46,6 +46,11 @@ namespace IssueObliviator
         {
             try
             {
+                var countUnderscores = fileName.Split('_').Length - 1;
+                if (countUnderscores < 4)
+                {
+                    return null;
+                }
                 var partialName = fileName.Substring(fileName.IndexOf("_") + 1);
                 var lastIndexSheetNumber = partialName.LastIndexOf("_");
                 var sheetNumber = partialName.Substring(0, lastIndexSheetNumber);
@@ -80,7 +85,11 @@ namespace IssueObliviator
         public bool IsRevisionCodeAcceptable() // Checks if revision code format complies to standard
         {
             var code = this.RevisionCode;
-            if (code.Length == 1 || IsRevisionCodeANumber())
+            if (code == null)
+            {
+                return false;
+            }
+            else if (code.Length == 1 || IsRevisionCodeANumber())
             {
                 return true;
             }
