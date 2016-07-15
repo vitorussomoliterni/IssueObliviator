@@ -17,15 +17,20 @@ namespace IssueObliviator
             var dwgDocuments = GetDocuments("*.dwg");
             MoveOlderFiles(pdfDocuments);
             MoveOlderFiles(dwgDocuments);
-            CheckSkippedFiles(lockedDocuments);
+            FixMoveErrors(lockedDocuments);
         }
 
-        private static void CheckSkippedFiles(List<Document> lockedDocuments)
+        private static void FixMoveErrors(List<Document> lockedDocuments)
         {
-            if (lockedDocuments.Count == 0)
+            var logMessage = "Try to close these files if open and then run the program again:\n\n";
+            if (lockedDocuments.Count > 0)
             {
-                // TODO: log the files that cannot be opened
-                MessageBox.Show("Some files could not be moved.", "Error", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Error);
+                foreach (var s in lockedDocuments)
+                {
+                    logMessage += s.FileName + "\n";
+                }
+                MessageBox.Show(logMessage, "Error: some files could not be moved", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Log(logMessage);
             }
         }
 
@@ -55,7 +60,7 @@ namespace IssueObliviator
                         {
                             destinationFile = RenameExistingDestinationFile(destinationFile, f);
                         }
-                        //Directory.Move(sourceFile, destinationFile);
+                        Directory.Move(sourceFile, destinationFile);
                     }
                 }
             }
@@ -247,9 +252,10 @@ namespace IssueObliviator
         {
             try
             {
-                using (StreamWriter w = File.AppendText(@""))
+                using (StreamWriter w = File.AppendText(@"IssueObliviatorErrorLog.txt"))
                 {
                     w.WriteLine(logMessage);
+                    w.WriteLine("Error logged on {0} at {1}", DateTime.Now.ToShortDateString(), DateTime.Now.ToShortTimeString());
                     w.WriteLine("-------------------------------");
                 }
             }
