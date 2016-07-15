@@ -17,10 +17,10 @@ namespace IssueObliviator
             var dwgDocuments = GetDocuments("*.dwg");
             MoveOlderFiles(pdfDocuments);
             MoveOlderFiles(dwgDocuments);
-            FixMoveErrors(lockedDocuments);
+            ShowErrorMessage(lockedDocuments);
         }
 
-        private static void FixMoveErrors(List<Document> lockedDocuments)
+        private static void ShowErrorMessage(List<Document> lockedDocuments)
         {
             var logMessage = "Try to close these files if open and then run the program again:\n\n";
             if (lockedDocuments.Count > 0)
@@ -29,7 +29,7 @@ namespace IssueObliviator
                 {
                     logMessage += s.FileName + "\n";
                 }
-                MessageBox.Show(logMessage, "Error: some files could not be moved", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(logMessage, "IssueObliviator error: some files could not be moved", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Log(logMessage);
             }
         }
@@ -261,7 +261,7 @@ namespace IssueObliviator
             }
             catch (Exception e)
             {
-                
+                MessageBox.Show(e.ToString(), "IssueObliviator error while logging", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }
