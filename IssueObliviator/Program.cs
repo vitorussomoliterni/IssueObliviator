@@ -68,6 +68,7 @@ namespace IssueObliviator
             {
                 var error = "Error while moving files:\n" +
                     e.GetType().Name + "\n" +
+                    e.Message + "\n" +
                     e.ToString();
                 Log(error);
                 MessageBox.Show(error, "Error");
