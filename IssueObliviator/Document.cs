@@ -9,13 +9,11 @@ namespace IssueObliviator
         public string FileType { get; set; }
         public string SheetNumber { get; set; }
         public string RevisionCode { get; set; }
-        public string FileExtension { get; set; }
 
         public Document(string file)
         {
             FullPath = file;
             FileName = GetFileName(FullPath);
-            FileExtension = GetFileExtension(FullPath);
             FileType = GetFileType(FullPath);
             SheetNumber = GetSheetNumber(FileName);
             RevisionCode = GetRevisionCode(FileName);
@@ -27,13 +25,6 @@ namespace IssueObliviator
             var fileNameLength = path.LastIndexOf(".") - fileNameStartIndex;
             var fileName = path.Substring(fileNameStartIndex, fileNameLength);
             return fileName;
-        }
-
-        private string GetFileExtension(string path)
-        {
-            var fileExtensionStartIndex = path.LastIndexOf(".");
-            var fileExtension = path.Substring(fileExtensionStartIndex);
-            return fileExtension;
         }
 
         private string GetRevisionCode(string fileName) // Extracts revision code from the file name
