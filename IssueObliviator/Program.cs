@@ -8,8 +8,8 @@ namespace IssueObliviator
 {
     public class Program
     {
-        static string destinationFolder = @"PREVIOUSLY ISSUED - KEEP\";
-        static List<Document> lockedDocuments = new List<Document>();
+        static string _destinationFolder = @"PREVIOUSLY ISSUED - KEEP\";
+        static List<Document> _lockedDocuments = new List<Document>();
 
         static void Main(string[] args)
         {
@@ -17,7 +17,7 @@ namespace IssueObliviator
             var dwgDocuments = GetDocuments("*.dwg");
             MoveOlderFiles(pdfDocuments);
             MoveOlderFiles(dwgDocuments);
-            ShowErrorMessage(lockedDocuments);
+            ShowErrorMessage(_lockedDocuments);
         }
 
         private static void ShowErrorMessage(List<Document> lockedDocuments)
@@ -38,9 +38,9 @@ namespace IssueObliviator
         {
             var oldFiles = GetOldFilesList(documents).Distinct();
 
-            if (!Directory.Exists(destinationFolder))
+            if (!Directory.Exists(_destinationFolder))
             {
-                Directory.CreateDirectory(destinationFolder);
+                Directory.CreateDirectory(_destinationFolder);
             }
 
             try
@@ -48,11 +48,11 @@ namespace IssueObliviator
                 foreach (var f in oldFiles)
                 {
                     var sourceFile = f.FullPath;
-                    var destinationFile = Directory.GetCurrentDirectory() + "\\" + destinationFolder + f.FileName;
-                    
+                    var destinationFile = Directory.GetCurrentDirectory() + @"\" + _destinationFolder + f.FileName;
+
                     if (IsFileLocked(f))
                     {
-                        lockedDocuments.Add(f);
+                        _lockedDocuments.Add(f);
                     }
                     else
                     {
@@ -60,6 +60,7 @@ namespace IssueObliviator
                         {
                             destinationFile = RenameExistingDestinationFile(destinationFile, f);
                         }
+                        Log("Attempting to copy this file: " + sourceFile + "\nTo this destination path: " + destinationFile);
                         Directory.Move(sourceFile, destinationFile);
                     }
                 }
@@ -102,6 +103,15 @@ namespace IssueObliviator
 
         private static string RenameExistingDestinationFile(string file, Document document)
         {
+            var currentTime = string.Format("{0:yyyy-MM-dd_hh-mm-ss-tt}", DateTime.Now);
+            var newDirectory = Directory.GetCurrentDirectory() + @"\" + _destinationFolder + "Files already supereseeded (" + currentTime + ")\\";
+            var logMessage = "This file already existed in the " + _destinationFolder + " folder and will be moved instead to " + newDirectory;
+            MessageBox.Show(logMessage, "IssueObliviator Error: some files were already copied", MessageBoxButtons.OK);
+            if(!Directory.Exists(newDirectory))
+            {
+                Directory.CreateDirectory(newDirectory);
+            }
+            file = newDirectory + document.FileName;
             file = file.Replace(document.FileType, string.Empty); // Removes the extension from the file name
             var version = 1;
             var textToAdd = "copy(" + version + ").";
