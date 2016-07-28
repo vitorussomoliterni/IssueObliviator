@@ -37,8 +37,7 @@ namespace IssueObliviator
                     return null;
                 }
                 var partialName = fileName.Substring(fileName.LastIndexOf("_") + 1);
-                var lastIndexReviosionCode = partialName.LastIndexOf(".");
-                var revisionCode = partialName.Substring(0, lastIndexReviosionCode);
+                var revisionCode = partialName.Substring(0);
                 return revisionCode;
             }
             catch (Exception e)

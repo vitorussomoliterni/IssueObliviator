@@ -48,7 +48,7 @@ namespace IssueObliviator
                 foreach (var f in oldFiles)
                 {
                     var sourceFile = f.FullPath;
-                    var destinationFile = Directory.GetCurrentDirectory() + @"\" + _destinationFolder + f.FileName;
+                    var destinationFile = Directory.GetCurrentDirectory() + @"\" + _destinationFolder + f.FileName + "." + f.FileType;
 
                     if (IsFileLocked(f))
                     {
@@ -103,7 +103,7 @@ namespace IssueObliviator
 
         private static string RenameExistingDestinationFile(Document document)
         {
-            var currentTime = string.Format("{0:yyyy-MM-dd_hh-mm-ss-tt}", DateTime.Now);
+            var currentTime = string.Format("{0:yyyy-MM-dd_hh-mm}", DateTime.Now);
             var newDirectory = Directory.GetCurrentDirectory() + @"\" + _destinationFolder + "Files already supereseeded (" + currentTime + ")\\";
             var logMessage = "This file already existed in the " + _destinationFolder + " folder and will be moved instead to " + newDirectory;
             MessageBox.Show(logMessage, "IssueObliviator Error: some files were already copied previously", MessageBoxButtons.OK);
