@@ -58,7 +58,7 @@ namespace IssueObliviator
                     {
                         if (File.Exists(destinationFile))
                         {
-                            destinationFile = RenameExistingDestinationFile(destinationFile, f);
+                            destinationFile = RenameExistingDestinationFile(f);
                         }
                         Log("Attempting to copy this file: " + sourceFile + "\nTo this destination path: " + destinationFile);
                         Directory.Move(sourceFile, destinationFile);
@@ -101,29 +101,25 @@ namespace IssueObliviator
             return false;
         }
 
-        private static string RenameExistingDestinationFile(string file, Document document)
+        private static string RenameExistingDestinationFile(Document document)
         {
             var currentTime = string.Format("{0:yyyy-MM-dd_hh-mm-ss-tt}", DateTime.Now);
             var newDirectory = Directory.GetCurrentDirectory() + @"\" + _destinationFolder + "Files already supereseeded (" + currentTime + ")\\";
             var logMessage = "This file already existed in the " + _destinationFolder + " folder and will be moved instead to " + newDirectory;
-            MessageBox.Show(logMessage, "IssueObliviator Error: some files were already copied", MessageBoxButtons.OK);
+            MessageBox.Show(logMessage, "IssueObliviator Error: some files were already copied previously", MessageBoxButtons.OK);
             if(!Directory.Exists(newDirectory))
             {
                 Directory.CreateDirectory(newDirectory);
             }
-            file = newDirectory + document.FileName;
-            file = file.Replace(document.FileType, string.Empty); // Removes the extension from the file name
             var version = 1;
-            var textToAdd = "copy(" + version + ").";
-            file += textToAdd + document.FileType; // Renames the file
+            var textToAdd = " - copy(" + version + ").";
+            var file = newDirectory + document.FileName + textToAdd + document.FileType; // Renames the file
 
             while (File.Exists(file))
             {
                 version++;
-                file = file.Replace(textToAdd, string.Empty); // Removes the old copy version
-                file = file.Replace(document.FileType, string.Empty); // Removes the extension from the file name
-                textToAdd = "copy(" + version + ")."; // Increments the new copy version number
-                file += textToAdd + document.FileType; // Renames the file with the new copy version
+                textToAdd = " - copy(" + version + ")."; // Increments the new copy version number
+                file = newDirectory + document.FileName + textToAdd + document.FileType; // Renames the file with the new copy version
             }
             
             return file;
