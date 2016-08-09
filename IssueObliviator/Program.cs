@@ -103,8 +103,7 @@ namespace IssueObliviator
 
         private static string RenameExistingDestinationFile(Document document)
         {
-            var currentTime = string.Format("{0:yyyy-MM-dd_hh-mm}", DateTime.Now);
-            var newDirectory = Directory.GetCurrentDirectory() + @"\" + _destinationFolder + "Files already supereseeded (" + currentTime + ")\\";
+            var newDirectory = Directory.GetCurrentDirectory() + @"\" + _destinationFolder + @"Files already supereseeded\";
             var logMessage = "This file already existed in the " + _destinationFolder + " folder and will be moved instead to " + newDirectory;
             MessageBox.Show(logMessage, "IssueObliviator Error: some files were already copied previously", MessageBoxButtons.OK);
             if(!Directory.Exists(newDirectory))
