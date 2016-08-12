@@ -8,8 +8,9 @@ namespace IssueObliviator
 {
     public class Program
     {
-        static string _destinationFolder = @"PREVIOUSLY ISSUED - KEEP\";
-        static List<Document> _lockedDocuments = new List<Document>();
+        private static string _destinationFolder = @"PREVIOUSLY ISSUED - KEEP\";
+        private static List<Document> _lockedDocuments = new List<Document>();
+        private static List<Document> _existingDocuments = new List<Document>();
 
         static void Main(string[] args)
         {
@@ -58,21 +59,27 @@ namespace IssueObliviator
                     {
                         if (File.Exists(destinationFile))
                         {
+                            _existingDocuments.Add(f); // Add the document to the list of already existing documents
                             destinationFile = RenameExistingDestinationFile(f);
                         }
-                        Log("Attempting to copy this file: " + sourceFile + "\nTo this destination path: " + destinationFile);
                         Directory.Move(sourceFile, destinationFile);
                     }
+                }
+
+                if (_existingDocuments.Count > 0)
+                {
+                    var error = "These files were already superseeded and they will be copied in a separate inner folder:\n";
+                    foreach (var f in _existingDocuments)
+                    {
+                        error += f.FileName + "." + f.FileType + "\n";
+                    }
+
+                    MessageBox.Show(error, "Error while moving files");
                 }
             }
             catch (Exception e)
             {
-                var error = "Error while moving files:\n" +
-                    e.GetType().Name + "\n" +
-                    e.Message + "\n" +
-                    e.ToString();
-                Log(error);
-                MessageBox.Show(error, "Error");
+                Log(e.ToString());
             }
         }
 
