@@ -8,8 +8,9 @@ namespace IssueObliviator
 {
     public class Program
     {
-        static string destinationFolder = @"SS\";
-        static List<Document> lockedDocuments = new List<Document>();
+        private static string _destinationFolder = @"SS\";
+        private static List<Document> _lockedDocuments = new List<Document>();
+        private static List<Document> _existingDocuments = new List<Document>();
 
         static void Main(string[] args)
         {
@@ -17,10 +18,11 @@ namespace IssueObliviator
             var dwgDocuments = GetDocuments("*.dwg");
             MoveOlderFiles(pdfDocuments);
             MoveOlderFiles(dwgDocuments);
-            ShowErrorMessage(lockedDocuments);
+            ShowLockedFilesErrorMessage(_lockedDocuments);
+            ShowExistingFilesErrorMessage(_existingDocuments);
         }
 
-        private static void ShowErrorMessage(List<Document> lockedDocuments)
+        private static void ShowLockedFilesErrorMessage(List<Document> lockedDocuments)
         {
             var logMessage = "Try to close these files if open and then run the program again:\n\n";
             if (lockedDocuments.Count > 0)
@@ -29,7 +31,22 @@ namespace IssueObliviator
                 {
                     logMessage += s.FileName + "\n";
                 }
-                MessageBox.Show(logMessage, "IssueObliviator error: some files could not be moved", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(logMessage, "IssueObliviator Error: some files could not be moved", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Log(logMessage);
+            }
+        }
+
+        private static void ShowExistingFilesErrorMessage(List<Document> existingDocuments)
+        {
+            var logMessage = "These files were already superseeded and they will be copied in a separate inner folder:\n\n";
+            if (existingDocuments.Count > 0)
+            {
+                foreach (var f in _existingDocuments)
+                {
+                    logMessage += f.FileName + "." + f.FileType + "\n";
+                }
+
+                MessageBox.Show(logMessage, "Error while moving files");
                 Log(logMessage);
             }
         }
@@ -38,9 +55,9 @@ namespace IssueObliviator
         {
             var oldFiles = GetOldFilesList(documents).Distinct();
 
-            if (!Directory.Exists(destinationFolder))
+            if (!Directory.Exists(_destinationFolder))
             {
-                Directory.CreateDirectory(destinationFolder);
+                Directory.CreateDirectory(_destinationFolder);
             }
 
             try
@@ -48,17 +65,18 @@ namespace IssueObliviator
                 foreach (var f in oldFiles)
                 {
                     var sourceFile = f.FullPath;
-                    var destinationFile = Directory.GetCurrentDirectory() + "\\" + destinationFolder + f.FileName;
+                    var destinationFile = Directory.GetCurrentDirectory() + @"\" + _destinationFolder + f.FileName + "." + f.FileType;
 
                     if (IsFileLocked(f))
                     {
-                        lockedDocuments.Add(f);
+                        _lockedDocuments.Add(f);
                     }
                     else
                     {
                         if (File.Exists(destinationFile))
                         {
-                            destinationFile = RenameExistingDestinationFile(destinationFile, f);
+                            _existingDocuments.Add(f); // Add the document to the list of already existing documents
+                            destinationFile = RenameExistingDestinationFile(f);
                         }
                         Directory.Move(sourceFile, destinationFile);
                     }
@@ -66,7 +84,7 @@ namespace IssueObliviator
             }
             catch (Exception e)
             {
-                MessageBox.Show(e.ToString(), "Error");
+                Log(e.ToString());
             }
         }
 
@@ -95,20 +113,24 @@ namespace IssueObliviator
             return false;
         }
 
-        private static string RenameExistingDestinationFile(string file, Document document)
+        private static string RenameExistingDestinationFile(Document document)
         {
-            file = file.Replace(document.FileType, string.Empty); // Removes the extension from the file name
+            var newDirectory = Directory.GetCurrentDirectory() + @"\" + _destinationFolder + @"Files already supereseeded\";
+            //var logMessage = "This file already existed in the " + _destinationFolder + " folder and will be moved instead to " + newDirectory;
+            //MessageBox.Show(logMessage, "IssueObliviator Error: some files were already copied previously", MessageBoxButtons.OK);
+            if (!Directory.Exists(newDirectory))
+            {
+                Directory.CreateDirectory(newDirectory);
+            }
             var version = 1;
-            var textToAdd = "copy(" + version + ").";
-            file += textToAdd + document.FileType; // Renames the file
+            var textToAdd = " - copy(" + version + ").";
+            var file = newDirectory + document.FileName + textToAdd + document.FileType; // Renames the file
 
             while (File.Exists(file))
             {
                 version++;
-                file = file.Replace(textToAdd, string.Empty); // Removes the old copy version
-                file = file.Replace(document.FileType, string.Empty); // Removes the extension from the file name
-                textToAdd = "copy(" + version + ")."; // Increments the new copy version number
-                file += textToAdd + document.FileType; // Renames the file with the new copy version
+                textToAdd = " - copy(" + version + ")."; // Increments the new copy version number
+                file = newDirectory + document.FileName + textToAdd + document.FileType; // Renames the file with the new copy version
             }
 
             return file;
@@ -261,7 +283,7 @@ namespace IssueObliviator
             }
             catch (Exception e)
             {
-                MessageBox.Show(e.ToString(), "IssueObliviator error while logging", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(e.ToString(), "IssueObliviator: Error while logging", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }
