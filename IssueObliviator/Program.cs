@@ -68,7 +68,7 @@ namespace IssueObliviator
 
                 if (_existingDocuments.Count > 0)
                 {
-                    var error = "These files were already superseeded and they will be copied in a separate inner folder:\n";
+                    var error = "These files were already superseeded and they will be copied in a separate inner folder:\n\n";
                     foreach (var f in _existingDocuments)
                     {
                         error += f.FileName + "." + f.FileType + "\n";
@@ -111,8 +111,8 @@ namespace IssueObliviator
         private static string RenameExistingDestinationFile(Document document)
         {
             var newDirectory = Directory.GetCurrentDirectory() + @"\" + _destinationFolder + @"Files already supereseeded\";
-            var logMessage = "This file already existed in the " + _destinationFolder + " folder and will be moved instead to " + newDirectory;
-            MessageBox.Show(logMessage, "IssueObliviator Error: some files were already copied previously", MessageBoxButtons.OK);
+            //var logMessage = "This file already existed in the " + _destinationFolder + " folder and will be moved instead to " + newDirectory;
+            //MessageBox.Show(logMessage, "IssueObliviator Error: some files were already copied previously", MessageBoxButtons.OK);
             if(!Directory.Exists(newDirectory))
             {
                 Directory.CreateDirectory(newDirectory);
