@@ -43,7 +43,7 @@ namespace IssueObliviator
             {
                 foreach (var f in _existingDocuments)
                 {
-                    logMessage += f.FileName + "." + f.FileType + "\n";
+                    logMessage += f.FileName + "\n";
                 }
 
                 MessageBox.Show(logMessage, "Error while moving files");
@@ -65,7 +65,7 @@ namespace IssueObliviator
                 foreach (var f in oldFiles)
                 {
                     var sourceFile = f.FullPath;
-                    var destinationFile = Directory.GetCurrentDirectory() + @"\" + _destinationFolder + f.FileName + "." + f.FileType;
+                    var destinationFile = Directory.GetCurrentDirectory() + @"\" + _destinationFolder + f.FileName;
 
                     if (IsFileLocked(f))
                     {
