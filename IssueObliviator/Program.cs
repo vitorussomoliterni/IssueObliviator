@@ -18,10 +18,11 @@ namespace IssueObliviator
             var dwgDocuments = GetDocuments("*.dwg");
             MoveOlderFiles(pdfDocuments);
             MoveOlderFiles(dwgDocuments);
-            ShowErrorMessage(_lockedDocuments);
+            ShowLockedFilesErrorMessage(_lockedDocuments);
+            ShowExistingFilesErrorMessage(_existingDocuments);
         }
 
-        private static void ShowErrorMessage(List<Document> lockedDocuments)
+        private static void ShowLockedFilesErrorMessage(List<Document> lockedDocuments)
         {
             var logMessage = "Try to close these files if open and then run the program again:\n\n";
             if (lockedDocuments.Count > 0)
@@ -31,6 +32,21 @@ namespace IssueObliviator
                     logMessage += s.FileName + "\n";
                 }
                 MessageBox.Show(logMessage, "IssueObliviator Error: some files could not be moved", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Log(logMessage);
+            }
+        }
+
+        private static void ShowExistingFilesErrorMessage(List<Document> existingDocuments)
+        {
+            var logMessage = "These files were already superseeded and they will be copied in a separate inner folder:\n\n";
+            if (existingDocuments.Count > 0)
+            {
+                foreach (var f in _existingDocuments)
+                {
+                    logMessage += f.FileName + "." + f.FileType + "\n";
+                }
+
+                MessageBox.Show(logMessage, "Error while moving files");
                 Log(logMessage);
             }
         }
@@ -64,17 +80,6 @@ namespace IssueObliviator
                         }
                         Directory.Move(sourceFile, destinationFile);
                     }
-                }
-
-                if (_existingDocuments.Count > 0)
-                {
-                    var error = "These files were already superseeded and they will be copied in a separate inner folder:\n\n";
-                    foreach (var f in _existingDocuments)
-                    {
-                        error += f.FileName + "." + f.FileType + "\n";
-                    }
-
-                    MessageBox.Show(error, "Error while moving files");
                 }
             }
             catch (Exception e)
